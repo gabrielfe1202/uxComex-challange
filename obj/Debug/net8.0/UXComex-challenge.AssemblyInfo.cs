@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UXComex-challenge")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c0b615e17b0e6e7d8e5322e7c76b4165e66051f2")]
 [assembly: System.Reflection.AssemblyProductAttribute("UXComex-challenge")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UXComex-challenge")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

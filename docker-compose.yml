@@ -22,3 +22,14 @@ services:
       '
     volumes:
       - ./01-init.sql:/01-init.sql
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uxcomex_web
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

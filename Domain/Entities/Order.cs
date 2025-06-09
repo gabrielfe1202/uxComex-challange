@@ -12,5 +12,6 @@ namespace UXComex_challenge.Domain.Entities
 
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
         public Client Client { get; set; }
+        public string ClientName { get; set; }
     }
 }

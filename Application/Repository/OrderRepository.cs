@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Transactions;
 using Dapper;
 using UXComex_challenge.Application.Interfaces;
 using UXComex_challenge.Domain.Entities;
@@ -21,13 +22,23 @@ namespace UXComex_challenge.Application.Repository
             {
                 connection.Open();
 
-                string sql = "SELECT Id, ClientId, CreatedAt, Total, Status FROM Orders";
+                string sql = @"
+                    SELECT 
+                        o.Id, 
+                        o.ClientId, 
+                        o.CreatedAt, 
+                        o.Total, 
+                        o.Status,
+                        c.Name AS ClientName
+                    FROM Orders o
+                    INNER JOIN Clients c ON o.ClientId = c.Id";
 
                 var orders = connection.Query<Order>(sql).ToList();
 
                 return orders;
             }
         }
+
 
         public Order GetById(int id)
         {
@@ -46,9 +57,16 @@ namespace UXComex_challenge.Application.Repository
                     return null;
 
                 string sqlItems = @"
-                    SELECT OrderId, ProductId, Quantity, UnitPrice
-                    FROM OrderItems
-                    WHERE OrderId = @OrderId";
+                    SELECT 
+                        oi.OrderId, 
+                        oi.ProductId, 
+                        oi.Quantity, 
+                        oi.UnitPrice,
+                        p.Name AS ProductName
+                    FROM OrderItems oi
+                    INNER JOIN Products p ON oi.ProductId = p.Id
+                    WHERE oi.OrderId = @OrderId";
+
 
                 var items = connection.Query<OrderItem>(sqlItems, new { OrderId = order.Id }).ToList();
 
@@ -77,7 +95,7 @@ namespace UXComex_challenge.Application.Repository
                     SELECT CAST(SCOPE_IDENTITY() as int);
                 ";
 
-                int newId = connection.ExecuteScalar<int>(sql, new
+                int newOrderId = connection.ExecuteScalar<int>(sql, new
                 {
                     order.ClientId,
                     order.CreatedAt,
@@ -85,7 +103,23 @@ namespace UXComex_challenge.Application.Repository
                     order.Status
                 });
 
-                return newId;
+                var sqlItem = @"
+                    INSERT INTO OrderItems (OrderId, ProductId, Quantity, UnitPrice)
+                    VALUES (@OrderId, @ProductId, @Quantity, @UnitPrice);
+                ";
+
+                foreach (var item in order.Items)
+                {
+                    connection.Execute(sqlItem, new
+                    {
+                        OrderId = newOrderId,
+                        item.ProductId,
+                        item.Quantity,
+                        item.UnitPrice
+                    });
+                }
+
+                return newOrderId;
             }
         }
 

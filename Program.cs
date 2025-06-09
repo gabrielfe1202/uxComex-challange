@@ -21,6 +21,8 @@ builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IService<Product>, ProductServices>();
 builder.Services.AddScoped<IRepository<Order>, OrderRepository>();
 builder.Services.AddScoped<IService<Order>, OrderServices>();
+builder.Services.AddScoped<IRepository<OrderNotification>, OrderNotificationRepository>();
+builder.Services.AddScoped<IService<OrderNotification>, OrderNotificationServices>();
 
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();

@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using UXComex_challenge.Domain.Entities
+@using UXComex_challenge.Application.Services
+@using UXComex_challenge.Application.Interfaces
+@inject IService<OrderNotification> NotificationService
+
+@{
+    var nots = NotificationService.list();
+}
+
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
@@ -26,16 +35,16 @@
             padding-top: 20px;
         }
 
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px 20px;
-        }
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px 20px;
+            }
 
-        .sidebar a:hover {
-            background-color: #495057;
-        }
+                .sidebar a:hover {
+                    background-color: #495057;
+                }
 
         .main-content {
             flex-grow: 1;
@@ -55,6 +64,15 @@
         footer {
             background-color: #f8f9fa;
         }
+
+        .navbar-nav > li > a {
+            padding: 15px 10px;
+        }
+
+        .navbar-right .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
     </style>
 </head>
 <body>
@@ -65,21 +83,67 @@
         <a asp-controller="Home" asp-action="Index">Dashboard</a>
         <a asp-controller="Clients" asp-action="Index">Clientes</a>
         <a asp-controller="Products" asp-action="Index">Produtos</a>
-        <a asp-controller="Orders" asp-action="Index">Pedidos</a>       
+        <a asp-controller="Orders" asp-action="Index">Pedidos</a>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
 
+        <!-- Top Navbar -->
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm">
-            <div class="container-fluid" style="border-bottom: 1px solid #ededed">
-                <span class="navbar-brand"></span>
+            <div class="container-fluid" style="border-bottom: 1px solid #ededed; display: flex; justify-content: flex-end; align-items: center;">
+              
+                <ul class="nav navbar-nav navbar-right" style="display: flex; align-items: center; gap: 15px; margin-right: 10px;">
+                    <!-- Notificações -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-bell"></i> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" style="width: 350px">
+                            @if (!nots.Any())
+                            {
+                                <li><p class="text-center" style="margin:10px;">Sem novas notificações</p></li>
+                            }
+                            else
+                            {
+                                @foreach (var n in nots)
+                                {
+                                    <li>
+                                        <div style="display:flex; padding:5px; align-items:center; justify-content:space-between; border-bottom:1px solid #ededed;">
+                                            <small>
+                                                Pedido <strong>@n.OrderId</strong> mudou de
+                                                <em>@n.OldStatus</em> para <em>@n.NewStatus</em>
+                                            </small>
+                                            <a asp-controller="Orders" asp-action="Upsert" asp-route-id="@n.OrderId">Ver</a>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+
+                    <!-- Usuário -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-user"></i> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Perfil</a></li>
+                            <li><a href="#">Configurações</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </nav>
 
+        <!-- Página principal -->
         <div class="content-wrapper">
             @RenderBody()
         </div>
 
+        <!-- Rodapé -->
         <footer class="border-top footer text-muted text-center py-3">
             <div class="container">
                 &copy; 2025 - UXComex Challenge
@@ -87,6 +151,7 @@
         </footer>
     </div>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.min.js"></script>

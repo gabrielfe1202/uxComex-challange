@@ -8,10 +8,16 @@ namespace UXComex_challenge.Web.Controllers
     public class OrdersController : Controller
     {
         private readonly IService<Order> _orderServices;
+        private readonly IService<Product> _productServices;
+        private readonly IService<Client> _clientServices;
+        private readonly IService<OrderNotification> _orderNotificartionServices;
 
-        public OrdersController(IService<Order> orderServices)
+        public OrdersController(IService<Order> orderServices, IService<Product> productServices, IService<Client> clientServices, IService<OrderNotification> orderNotificartionServices)
         {
             _orderServices = orderServices;
+            _productServices = productServices;
+            _clientServices = clientServices;
+            _orderNotificartionServices = orderNotificartionServices;
         }
         public IActionResult Index()
         {
@@ -25,7 +31,7 @@ namespace UXComex_challenge.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchPhrase))
             {
-                //orders = orders.Where(u => u.Name.Contains(searchPhrase, StringComparison.OrdinalIgnoreCase)).ToList();
+                orders = orders.Where(u => u.ClientName.Contains(searchPhrase, StringComparison.OrdinalIgnoreCase) || u.Status.Contains(searchPhrase, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             var total = orders.Count;
@@ -50,11 +56,42 @@ namespace UXComex_challenge.Web.Controllers
                 respose = _orderServices.GetById(id);
             }
 
+            var clients = _clientServices.list();
+            ViewBag.clients = clients;
+
+            var products = _productServices.list();
+            ViewBag.products = products;
+
             return View(respose);
         }
 
         [HttpPost]
-        public IActionResult Save(Order order)
+        public IActionResult AlterarStatus(int id,[FromBody] string status)
+        {
+            try
+            {
+                var order = _orderServices.GetById(id);
+                var not = new OrderNotification()
+                {
+                    ChangedAt = DateTime.Now,
+                    NewStatus = status,
+                    OldStatus = order.Status,
+                    OrderId = order.Id
+                };
+                _orderNotificartionServices.Insert(ref not);
+                order.Status = status;
+                _orderServices.UpdateData(order);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao alterar status: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Save([FromBody]Order order)
         {
             if (order.Id == 0)
             {
