@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Products Page";
+}
+
+<button onclick="window.location.href = '/Products/Upsert/0'" class="btn btn-sm btn-primary command-edit" data-row-id="${row.id}">Novo</button>
+
+<table id="grid" class="table table-condensed table-hover table-striped">
+    <thead>
+        <tr>
+            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false">ID</th>
+            <th data-column-id="name">Nome</th>
+            <th data-column-id="price">Preço</th>
+            <th data-column-id="quantity">Quantidade</th>
+            <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script>
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        $(document).ready(function () {
+            $("#grid").bootgrid({
+                                navigation: 3,
+                    padding: 2,
+                    ajax: true,
+                    rowCount: [10, 25, 50, 100, 200, -1],
+                    ajaxSettings: {
+                        method: "POST",
+                        dataType: "json",
+                    },
+                url: "/Products/List",
+                formatters: {
+                    "commands": function (column, row) {
+                        return `
+                            <button class="btn btn-sm btn-primary command-edit" data-row-id="${row.id}"><i class='fa fa-edit'></i></button>
+                            <button class="btn btn-sm btn-danger command-delete" data-row-id="${row.id}"><i class='fa fa-trash'></i></button>
+                        `;
+                    }
+                }
+            }).on("loaded.rs.jquery.bootgrid", function () {
+                $("#grid").find(".command-edit").on("click", function () {
+                    var id = $(this).data("row-id");
+                    window.location.href = "/Products/Upsert/" + id
+                });
+                $("#grid").find(".command-delete").on("click", function () { 
+                    if (confirm("Deseja Excluir ?")) {
+                        $.ajax({
+                            url: "../Products/Delete/" + $(this).data("row-id"),
+                            type: "POST",
+                            contentType: "application/json;charset=UTF-8",
+                            data: {},
+                            dataType: "json",
+                            success: function (result) {
+                                console.log(result)
+                                if (result.success) {
+                                    $("#grid").bootgrid("reload");
+                                }
+                                else {
+                                    alert(result.msg);
+                                }
+                            },
+                            error: function (errormessage) {
+                                alert(errormessage.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}

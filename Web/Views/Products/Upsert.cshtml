@@ -1,0 +1,45 @@
+﻿@using UXComex_challenge.Domain.Entities
+@model Product
+@{
+    ViewData["Title"] = "Clients Upsert";
+}
+
+<section>
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form id="clientForm" method="post" action="/Products/Save">
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id">
+
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Price" class="form-label">Preço</label>
+                        <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Quantity" class="form-label">Quantidade em estoque</label>
+                        <input type="text" class="form-control" id="Quantity" name="Quantity" value="@Model.Quantity" required>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+          $('#Price').mask('000.000.000,00', {reverse: true});
+        });
+    </script>
+
+}

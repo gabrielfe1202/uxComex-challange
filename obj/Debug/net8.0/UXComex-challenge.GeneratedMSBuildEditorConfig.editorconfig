@@ -1,0 +1,73 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = UXComex_challenge
+build_property.RootNamespace = UXComex_challenge
+build_property.ProjectDir = C:\Users\gabriel\source\repos\UXComex-challenge\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = C:\Users\gabriel\source\repos\UXComex-challenge
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Clients/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXENsaWVudHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Clients/Upsert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXENsaWVudHNcVXBzZXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXEhvbWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Home/NotFound.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXEhvbWVcTm90Rm91bmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXEhvbWVcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Orders/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXE9yZGVyc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Orders/Upsert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXE9yZGVyc1xVcHNlcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Products/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFByb2R1Y3RzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Products/Upsert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFByb2R1Y3RzXFVwc2VydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNoYXJlZFxfVmFsaWRhdGlvblNjcmlwdHNQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXF9WaWV3SW1wb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXF9WaWV3U3RhcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/gabriel/source/repos/UXComex-challenge/Web/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViXFZpZXdzXFNoYXJlZFxfTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-ifjgvmspq9

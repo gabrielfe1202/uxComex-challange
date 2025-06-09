@@ -1,0 +1,24 @@
+name: UxComexChallange
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./init-db:/init-db
+
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - sqlserver
+    entrypoint: >
+      bash -c '
+      sleep 20 &&
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P "YourStrong@Passw0rd" -i /01-init.sql
+      '
+    volumes:
+      - ./01-init.sql:/01-init.sql

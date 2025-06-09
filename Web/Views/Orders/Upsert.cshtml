@@ -1,0 +1,228 @@
+﻿@using UXComex_challenge.Domain.Entities
+@using UXComex_challenge.Domain.ObjectValues
+@model Order
+
+@{
+    ViewData["Title"] = "Clients Upsert";
+}
+
+<section>
+    <div class="container">
+        <h2 class="text-center">Novo Pedido</h2>
+
+        <!-- Cliente -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">Cliente</div>
+            <div class="panel-body">
+                @if (Model.Client == null)
+                {
+                    <div class="form-group">
+                        <label for="ClientId">Cliente:</label>
+                        <select class="form-control" id="ClientId" name="ClientId">
+                            <option disabled selected>Escolha um cliente...</option>
+                            <option value="1">João Silva - joao@email.com</option>
+                            <option value="2">Maria Oliveira - maria@email.com</option>
+                            <option value="3">Empresa XPTO - contato@xpto.com.br</option>
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" id="ClientId" value="@Model.Client.Id" />
+                    <div>
+                        <div><b>Nome:</b> @Model.Client.Name</div>
+                        <div><b>Email:</b> @Model.Client.Email</div>
+                        <div><b>Telefone:</b> @Model.Client.PhoneNumber</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Produtos -->
+        <div class="panel panel-success">
+            <div class="panel-heading">Adicionar Produtos</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="produtoSelect">Produto:</label>
+                    <select class="form-control" id="produtoSelect">
+                        <option disabled selected>Escolha um produto...</option>
+                        <option value="1" data-nome="Produto A" data-preco="100.00">Produto A - R$100,00</option>
+                        <option value="2" data-nome="Produto B" data-preco="150.00">Produto B - R$150,00</option>
+                        <option value="3" data-nome="Produto C" data-preco="200.00">Produto C - R$200,00</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="adicionarProduto()">Adicionar Produto</button>
+
+                <table class="table table-bordered table-hover mt-20" id="tabelaProdutos">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Preço Unitário</th>
+                            <th>Qtd</th>
+                            <th>Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Resumo -->
+        <div class="panel panel-default">
+            <div class="panel-heading">Resumo do Pedido</div>
+            <div class="panel-body">
+                <p><strong>Total Geral:</strong> R$ <span id="totalGeral">0.00</span></p>
+                <button class="btn btn-success" onclick="finalizarPedido()">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        var produtosAdicionados = [];
+
+        function adicionarProduto() {
+            var select = document.getElementById("produtoSelect");
+            var selected = select.options[select.selectedIndex];
+            var id = selected.value;
+            var nome = selected.getAttribute("data-nome");
+            var preco = parseFloat(selected.getAttribute("data-preco"));
+
+            if (!id) return;
+
+            var existente = produtosAdicionados.find(p => p.id === id);
+            if (existente) {
+                existente.qtd++;
+            } else {
+                produtosAdicionados.push({ id: id, nome: nome, preco: preco, qtd: 1 });
+            }
+
+            renderizarTabela();
+        }
+
+        function removerProduto(id) {
+            produtosAdicionados = produtosAdicionados.filter(p => p.id !== id);
+            renderizarTabela();
+        }
+
+        function atualizarQtd(id, novaQtd) {
+            var produto = produtosAdicionados.find(p => p.id === id);
+            if (produto) {
+                produto.qtd = parseInt(novaQtd);
+                renderizarTabela();
+            }
+        }
+
+        function renderizarTabela() {
+            var tbody = document.querySelector("#tabelaProdutos tbody");
+            var total = 0;
+            tbody.innerHTML = "";
+
+            produtosAdicionados.forEach(function(prod) {
+                var subtotal = prod.preco * prod.qtd;
+                total += subtotal;
+
+                var tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${prod.nome}</td>
+                    <td>R$ ${prod.preco.toFixed(2)}</td>
+                    <td>
+                        <input type="number" class="form-control form-control-inline" min="1" value="${prod.qtd}"
+                        onchange="atualizarQtd('${prod.id}', this.value)">
+                    </td>
+                    <td>R$ ${subtotal.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-xs" onclick="removerProduto('${prod.id}')">Remover</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("totalGeral").innerText = total.toFixed(2);
+        }
+
+        function finalizarPedido() {
+            var clienteId = document.getElementById("ClientId")?.value;
+
+            if (!clienteId) {
+                alert("Selecione um cliente.");
+                return;
+            }
+
+            if (produtosAdicionados.length === 0) {
+                alert("Adicione pelo menos um produto.");
+                return;
+            }
+
+            var itens = produtosAdicionados.map(p => ({
+                ProductId: parseInt(p.id),
+                Quantity: p.qtd,
+                UnitPrice: p.preco
+            }));
+
+            var order = {
+                ClientId: parseInt(clienteId),
+                Items: itens
+            };
+
+            console.log(order)
+
+            fetch('/Order/SaveOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                },
+                body: JSON.stringify(order)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Pedido salvo com sucesso!");
+                    window.location.href = '/Order/Index';
+                } else {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao salvar pedido:", error);
+                alert("Erro ao salvar pedido.");
+            });
+        }
+
+        // Se estiver em modo edição, inicializar os produtos existentes do Model.Items
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            <text>
+                    window.onload = function () {
+                        produtosAdicionados = [
+                @foreach (var item in Model.Items)
+                {
+                    @: { id: "@item.ProductId", nome: "Produto @item.ProductId", preco: @item.UnitPrice.ToString().Replace(",", "."), qtd: @item.Quantity },
+                }
+                        ];
+                        renderizarTabela();
+                    };
+            </text>
+        }
+    </script>
+
+    <style>
+        .panel-heading {
+            font-weight: bold;
+        }
+
+        .form-control-inline {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+    </style>
+}
